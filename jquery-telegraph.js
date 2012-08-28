@@ -11,31 +11,41 @@
 */
 
 ;(function($) {
-    $.fn.telegraph.channels = { };
 
-    $.fn.telegraph = function(channel_name) {
+    $.telegraph = function(channel_name) {
         var callbacks;
-        var channel = channel_name && this.channels[ channel_name ];
+        var channel = channel_name && $.telegraph.channels[ channel_name ];
 
         if (!channel) {
             callbacks = jQuery.Callbacks();
             channel = {
                 publish: callbacks.fire,
                 subscribe: callbacks.add,
-                unsubscribe: callbacks.remove
+                unsubscribe: callbacks.remove,
+                clear: $.telegraph.clear,
             };
 
             if (channel_name) {
-                this.channels[ channel_name ] = channel;
+                $.telegraph.channels[ channel_name ] = channel;
             }
         }
 
         return channel;
     }
 
-    $.fn.telegraph.defaults = { }
+    $.telegraph.clear = function(channel_name) {
+        var channel = channel_name && $.telegraph.channels[ channel_name ];
 
-    $.fn.telegraph.settings = { }
+        if (channel) {
+            $.telegraph.channels[ channel_name ] = undefined;
+        }
+    }
+
+    $.telegraph.channels = { };
+
+    $.telegraph.defaults = { }
+
+    $.telegraph.settings = { }
 
 
 })(jQuery);
